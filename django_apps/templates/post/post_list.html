@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Post list</h1>
+{% for post in posts %}
+<div>{{ post.id }}</div>
+<li>{{ post.author }}</li>
+<li>{{ post.photo }}</li>
+<li>{{ post.title }}</li>
+<li>{{ post.content }}</li>
+<li>{{ post.like_users }}</li>
+<li>{{ post.tags }}</li>
+<li>{{ post.created_date }}</li>
+<li>{{ post.modified_date }}</li>
+<hr>
+{% endfor %}
+</body>
+</html>
+
+
+
+
