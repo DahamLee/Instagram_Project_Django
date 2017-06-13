@@ -7,15 +7,12 @@
 <body>
 <h1>Post list</h1>
 {% for post in posts %}
-<div>{{ post.id }}</div>
-<li>{{ post.author }}</li>
-<li>{{ post.photo }}</li>
-<li>{{ post.title }}</li>
-<li>{{ post.content }}</li>
-<li>{{ post.like_users }}</li>
-<li>{{ post.tags }}</li>
-<li>{{ post.created_date }}</li>
-<li>{{ post.modified_date }}</li>
+<div>
+    <span>{{ post.id }}</span>
+    <span>{{ post.photo.url }}</span>
+    <img src="{{ post.photo.url }}" alt="">
+
+</div>
 <hr>
 {% endfor %}
 </body>

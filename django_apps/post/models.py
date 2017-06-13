@@ -6,15 +6,15 @@ from utils.models.mixin import TimeStampedMixin
 
 class Post(TimeStampedMixin):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
-    photo = models.ImageField(max_length=30)
+    photo = models.ImageField(upload_to='post', max_length=30)
 
-    title = models.CharField(max_length=30)
-    content = models.TextField(max_length=100)
+    title = models.CharField(max_length=30, blank=True)
+    content = models.TextField(max_length=100, blank=True)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                         related_name='like_post',
                                         through='PostLike',
                                         )
-    tags = models.ManyToManyField('Tag')
+    tags = models.ManyToManyField('Tag', blank=True)
 
     def add_comment(self, user, content):
         a = self.comment_set.create(author=user, content=content)
