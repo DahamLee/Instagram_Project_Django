@@ -2,18 +2,8 @@
 
 {% block content %}
 
-<h1>Post list</h1>
-{% for post in posts %}
-<div>
-    <span>{{ post.id }}</span>
-    <span>{{ post.photo.url }}</span>
-    <img src="{{ post.photo.url }}" alt="">
 
-</div>
-<hr>
+{% for post in posts %}
+  {% include 'include/post.html' %}
 {% endfor %}
 {% endblock %}
-
-
-
-
