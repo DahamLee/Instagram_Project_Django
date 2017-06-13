@@ -1,4 +1,4 @@
-<article>
+<article class="post">
 <header>
 
 <div class="post-header-left">
@@ -24,11 +24,17 @@
 <p>좋아요 {{ post.like_count }}</p>
 <div class="post-comment-container">
   <div class="post-comment">
-    <a href="" class="commnet-author"></a>
-    <span class="comment-content"></span>
+
+    {% for comment in post.comment_set.all %}
+
+    <a href="" class="commnet-author">{{ comment.author }}</a>
+    <span class="comment-content">{{ comment.content }}</span>
     <a href="" class="comment-tag"></a>
     <a href="" class="comment-tag"></a>
     <a href="" class="comment-tag"></a>
+    <p class="comment-created">{{ comment.created_date }}</p>
+
+    {% endfor %}
   </div>
 </div>
 <p class="created">{{ post.created_date }}</p>
