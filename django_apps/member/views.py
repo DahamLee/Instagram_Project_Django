@@ -41,26 +41,25 @@ def logout(request):
     django_logout(request)
     return redirect('post:post_list')
 
+
 def signup(request):
     if request.method == 'POST':
 
-        user_id=request.POST['id']
-        password1=request.POST['password1']
-        password2=request.POST['password2']
-        check = request.POST['check']
-        print(check)
+        user_id = request.POST['id']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
 
-        if User.objects.get(username=user_id):
+        if User.objects.filter(username=user_id).exists():
             return HttpResponse('이미 있는 id입니다')
-        else:
+        elif password2 != password1:
+            return HttpResponse('Password OK')
 
-            if password2==password1:
-                User.objects.create(user=user_id)
-                User.set_password(password2)
-                User.save()
-            else:
+        user1 = User.objects.create_user(
+            username=user_id,
+            password=password1)
 
-                return redirect('post:post_list')
+        django_login(request, user1)
+        return redirect('post:post_list')
 
     else:
         return render(request, 'member/signup.html')
