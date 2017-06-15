@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <link rel="stylesheet" href="{% static 'css/layout.css' %}">
   <link rel="stylesheet" href="{% static 'css/post.css' %}">
+  <link rel="stylesheet" href="{% static 'css/common.css' %}">
   <title>Instagram</title>
 </head>
 <body>
@@ -33,6 +34,18 @@
             <img src="{% static 'images/icon_profile.png' %}" alt="">
           </a>
         </div>
+
+      </nav>
+      <nav>
+        <div>
+          {% if user.is_authenticated %}
+          <span>{{ user }}로 로그인 중</span>
+          <a href="{% url 'member:member_logout' %}" class="btn">로그아웃</a>
+          {% else %}
+          <a href="{% url 'member:member_login' %}" class="btn">로그인</a>
+          {% endif %}
+        </div>
+
 
       </nav>
     </header>
