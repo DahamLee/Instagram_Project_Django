@@ -70,9 +70,8 @@ def post_create(request):
         if comment_string:
             post.comment_set.create(
                 author=user,
-                content = comment_string,
+                content=comment_string,
             )
-
 
         return redirect('post:post_detail', post_pk=post.pk)
     else:
