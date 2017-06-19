@@ -6,7 +6,7 @@ from utils.models.mixin import TimeStampedMixin
 
 class Post(TimeStampedMixin):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
-    photo = models.ImageField(upload_to='post', max_length=30)
+    photo = models.ImageField(upload_to='post', max_length=30, blank=True)
 
     title = models.CharField(max_length=30, blank=True)
     content = models.TextField(max_length=100, blank=True)
@@ -15,6 +15,11 @@ class Post(TimeStampedMixin):
                                         through='PostLike',
                                         )
     tags = models.ManyToManyField('Tag', blank=True)
+    my_comment = models.OneToOneField(
+        'Comment',
+        blank=True,
+        null=True,
+        related_name='+')
 
     class Meta:
         ordering = ['-pk', ]

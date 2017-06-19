@@ -1,12 +1,14 @@
 from django import forms
 
-from ..models import Post
+from ..models import Post, Comment
 
 
 class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['photo'].required = True
+        if self.instance.my_comment:
+            self.fields['comment'].initial = self.instance.my_comment
 
     comment = forms.CharField(
         required=False,
@@ -18,6 +20,7 @@ class PostForm(forms.ModelForm):
         fields = (
             'photo',
             'comment',
+
         )
 
     def save(self, **kwargs):
@@ -27,13 +30,19 @@ class PostForm(forms.ModelForm):
         self.instance.author = author
         instance = super().save(**kwargs)
 
-        if commit:
-            comment_string = self.cleaned_data['comment']
+        comment_string = self.cleaned_data['comment']
 
-            if commit and comment_string:
+        if commit and comment_string:
 
-                instance.comment_set.create(
-                    author=instance.author,
-                    content=comment_string
+            if instance.my_comment:
+                instance.my_comment.content = comment_string
+                instance.my_comment.save()
+            else:
+                instance.my_comment =Comment.objects.create(
+                    post=instance,
+                    author=author,
+                    content=comment_string,
                 )
+            instance.save()
+
         return instance

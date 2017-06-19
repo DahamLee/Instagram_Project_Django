@@ -1,52 +1,56 @@
+{% load static %}
+
 <article class="post">
-<header>
+  <div class="post-bottom">
+    <header>
 
-<div class="post-header-left">
-  <img src="" alt="">
-  <span>{{ post.author }}</span>
-</div>
-<div class="post-header-right">
+      <div class="post-header-left">
+        <img src="" alt="">
+        <span class="header-author">{{ post.author }}</span>
+      </div>
+      <div class="post-header-right">
 
-</div>
-</header>
-<div class="post-photo-container">
+      </div>
+    </header>
+    <div class="post-photo-container">
 
-  {% if type == 'list' %}
-  <a href="{% url 'post:post_detail' post_pk=post.pk %}">
-    {% endif %}
-    <img src="{{ post.photo.url }}" alt="">
-  {% if type == 'list' %}
-  </a>
-  {% endif %}
+      {% if type == 'list' %}
+      <a href="{% url 'post:post_detail' post_pk=post.pk %}">
+        {% endif %}
+        <img src="{{ post.photo.url }}" alt="">
+        {% if type == 'list' %}
+      </a>
+      {% endif %}
 
-</div>
-<div class ="post-btn-container">
-<a href="#">
-  <img src="" alt="">
-</a>
-<a href="#">
-  <img src="" alt="">
-</a>
-</div>
-<p>좋아요 {{ post.like_count }}</p>
-<div class="post-comment-container">
-  <div class="post-comment">
+    </div>
+    <div class="post-btn-container">
+      <a href="#">
+        <img src="{% static 'images/post_heart.png' %}" alt="">
+      </a>
+      <a href="#">
+        <img src="{% static 'images/post_comment.png' %}" alt="">
+      </a>
+    </div>
+    <p>좋아요 {{ post.like_count }}</p>
+    <div class="post-comment-container">
+      <div class="post-comment">
 
-    {% for comment in post.comment_set.all %}
+        {% for comment in post.comment_set.all %}
 
-    <a href="" class="commnet-author">{{ comment.author }}</a>
-    <span class="comment-content">{{ comment.content }}</span>
-    <a href="" class="comment-tag"></a>
-    <a href="" class="comment-tag"></a>
-    <a href="" class="comment-tag"></a>
-    <p class="comment-created">{{ comment.created_date }}</p>
+        <a href="" class="commnet-author">{{ comment.author }}</a>
+        <span class="comment-content">{{ comment.content }}</span>
+        <a href="" class="comment-tag"></a>
+        <a href="" class="comment-tag"></a>
+        <a href="" class="comment-tag"></a>
+        <p class="comment-created">{{ comment.created_date }}</p>
 
-    {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+    <p class="created">{{ post.created_date }}</p>
+    <form action="">
+      <input type="text" placeholder="댓글달기">
+    </form>
   </div>
-</div>
-<p class="created">{{ post.created_date }}</p>
-<form action="">
-  <input type="text" placeholder="댓글달기">
-</form>
 
 </article>
