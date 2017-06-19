@@ -16,12 +16,17 @@ class Post(TimeStampedMixin):
                                         )
     tags = models.ManyToManyField('Tag', blank=True)
 
+    class Meta:
+        ordering = ['-pk', ]
+
     def add_comment(self, user, content):
         a = self.comment_set.create(author=user, content=content)
         return a
 
     def add_tag(self, tag_name):
         tag, tag_created = Tag.objects.get_or_create(name=tag_name)
+        print('tag: {}'.format(type(tag)))
+        print('tag_created: {}'.format(tag_created))
         if not self.tags.filter(name=tag_name):
             self.tags.add(tag)
 

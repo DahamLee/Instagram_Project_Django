@@ -42,7 +42,13 @@
           <span>{{ user }}로 로그인 중</span>
           <a href="{% url 'member:member_logout' %}" class="btn">로그아웃</a>
           {% else %}
-          <a href="{% url 'member:member_login' %}" class="btn">로그인</a>
+          <form action="{% url 'member:member_login' %}" method="POST">
+            {% csrf_token %}
+            <!-- <label for="id-login-username"></label> -->
+            {{ login_form }}
+            <button type="submit" class="btn">로그인</button>
+          </form>
+          <!--<a href="{% url 'member:member_login' %}" class="btn">로그인</a>-->
           {% endif %}
         </div>
 

@@ -5,7 +5,6 @@ from . import views
 app_name = 'post'
 
 urlpatterns = [
-    url(r'^$', views.index),
     url(r'^list/$', views.post_list, name='post_list'),
 
     # 정규표현식에서 매칭 된 그룹을 위치인수로 반환하는 방법
