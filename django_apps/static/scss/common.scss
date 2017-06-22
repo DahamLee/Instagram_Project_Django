@@ -8,6 +8,10 @@
   background-color: white;
   font-size: 11px;
 }
+.btn-xs{
+  font-size: 10px;
+  padding: 10px;
+}
 .field-wrapper{
   margin-bottom: 10px;
 
@@ -31,4 +35,8 @@
     margin-top: 2px;
     margin-bottom: 0;
   }
+}
+
+a.hash-tag{
+  color : $color-tag;
 }

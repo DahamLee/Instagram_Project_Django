@@ -1,23 +1,26 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from post.decorators import post_owner
 from post.forms import CommentForm
 from ..forms import PostForm
-from ..models import Post
+from ..models import Post, Tag
 
-
-__all__=(
+__all__ = (
     'post_list',
     'post_create',
     'post_detail',
     'post_modify',
     'post_delete',
     'post_anyway',
+    'hashtag_post_list',
+    'post_like_toggle',
 )
 
 # 자동으로 Django에서 인증에 사용하는 User모델클래스를 리턴
@@ -25,7 +28,7 @@ __all__=(
 User = get_user_model()
 
 
-def post_list(request):
+def post_list_original(request):
     # 모든 Post목록을 'posts'라는 key로 context에 담아 return render처리
     # post/post_list.html을 template으로 사용하도록 한다
 
@@ -36,6 +39,26 @@ def post_list(request):
         'comment_form': CommentForm(),
 
     }
+    return render(request, 'post/post_list.html', context)
+
+
+def post_list(request):
+    all_post = Post.objects.all()
+    paginator = Paginator(all_post, 2)
+    pagee = request.GET.get('page')
+
+    try:
+        posts = paginator.page(pagee)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    context = {
+        'posts': posts,
+        'comment_form': CommentForm(),
+    }
+
     return render(request, 'post/post_list.html', context)
 
 
@@ -167,6 +190,51 @@ def post_delete(request, post_pk):
             'post': post,
         }
         return render(request, 'post/post_delete.html', context)
+
+
+
+
+
+
+
+
+@require_POST
+@login_required
+def post_like_toggle(request, post_pk):
+
+    post = get_object_or_404(Post, pk=post_pk)
+
+    # if request.user not in post.like_users:
+    #     post.like_users.add(request.user)
+
+    post_like, post_like_created = post.postlike_set.get_or_create(user=request.user)
+
+    if not post_like_created:
+        post_like.delete()
+
+    next = request.GET.get('next')
+    if next:
+        return redirect(next)
+
+    return redirect('post:post_detail', post_pk)
+
+
+
+
+
+
+def hashtag_post_list(request, tag_name):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = Post.objects.filter(my_comment__tags=tag)
+    posts_count = posts.count()
+
+    context = {
+        'tag': tag,
+        'posts': posts,
+        'posts_count': posts_count,
+    }
+
+    return render(request, 'post/hashtag_post_list.html', context)
 
 
 def post_anyway(request):

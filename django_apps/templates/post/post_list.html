@@ -1,9 +1,34 @@
 {% extends "common/base.html" %}
 
+{% load custom_tags %}
+
 {% block content %}
+
+
+
+<div class="test">{{ request.GET|query_string }}</div>
 
 
 {% for post in posts %}
   {% include 'include/post.html' with type='list' %}
 {% endfor %}
+
+
+
+
+{% if posts.has_previous %}
+<a href="{{ request.path }}?page=1" class="btn">처음으로</a>
+<a href="{{ request.path }}?page={{ posts.previous_page_number }}" class="btn">이전 ({{ posts.previous_page_number }}페이지)</a>
+{% endif %}
+
+<a class="btn">{{ posts.number }}페이지 </a>
+
+{% if posts.has_next %}
+<a href="{{ request.path }}?page={{ posts.next_page_number }}" class="btn">다음 ({{ posts.next_page_number }}페이지)</a>
+<a href="{{ request.path }}?page={{ posts.paginator.num_pages }}" class="btn">마지막 페이지</a>
+
+{% endif %}
+
+
+
 {% endblock %}
