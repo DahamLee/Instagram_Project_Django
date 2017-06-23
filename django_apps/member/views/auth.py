@@ -1,18 +1,26 @@
+from pprint import pprint
+
+import requests
+from django.conf import settings
 from django.contrib.auth import get_user_model, \
     login as django_login, \
     logout as django_logout
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
+from django.shortcuts import render, redirect
 
-from .forms import UserEditForm
-from .forms import LoginForm
-from .forms import SignupForm
+from ..forms import LoginForm
+from ..forms import SignupForm
 
 # Create your views here.
 
 User = get_user_model()
+
+__all__ = (
+    'login',
+    'logout',
+    'signup',
+    'facebook_login',
+)
 
 
 def login(request):
@@ -99,61 +107,25 @@ def signup(request):
     return render(request, 'member/signup.html', context)
 
 
-def profile(request, user_pk=None):
-    NUM_POST_PER_PAGE = 3
-    page = request.GET.get('page', 1)
+def facebook_login(request):
+    redirect_uri = '{}://{}{}'.format(
+        request.scheme,
+        request.META['HTTP_HOST'],
+        request.path,
+    )
 
-    try:
-        page = int(page) if int(page) > 1 else 1
+    url_access_token = 'https://graph.facebook.com/' \
+                       'v2.9/oauth/access_token?client_id={app-id}&redirect_uri=' \
+                       '{redirect-uri}&client_secret={app-secret}&code={code-parameter}'
 
-    except ValueError:
-        page = 1
-    except Exception as e:
-        page = 1
-        print(e)
-
-    if user_pk:
-        cur_user = get_object_or_404(User, pk=user_pk)
-    else:
-        cur_user = request.user
-
-    posts = cur_user.post_set.order_by('-created_date')[:page * NUM_POST_PER_PAGE]
-    post_count = cur_user.post_set.count()
-
-    next_page = page + 1 if post_count > page * NUM_POST_PER_PAGE else None
-
-    context = {
-        'cur_user': cur_user,
-        'posts': posts,
-        'post_count': post_count,
-        'page': page,
-        'next_page': next_page,
-    }
-
-    return render(request, 'member/profile.html', context)
-
-
-@require_POST
-@login_required
-def follow_toggle(request, user_pk):
-    next = request.GET.get('next')
-
-    target_user = get_object_or_404(User, pk=user_pk)
-    request.user.follow_toggle(target_user)
-    if next:
-        return redirect(next)
-    return redirect('member:profile', user_pk=user_pk)
-
-
-def profile_edit(request):
-    if request.method == 'POST':
-        form = UserEditForm(data=request.POST, instance=request.user, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('member:my_profile')
-    else:
-        form = UserEditForm(instance=request.user)
-        context = {
-            'form':form
+    code = request.GET.get('code')
+    if code:
+        url_access_token_params = {
+            'client_id': settings.FACEBOOK_APP_ID,
+            'redirect_uri': redirect_uri,
+            'client_secret': settings.FACEBOOK_SECRET_CODE,
+            'code': code,
         }
-        return render(request, 'member/profile_edit.html', context)
+        response = requests.get(url_access_token, params=url_access_token_params)
+        result = response.json()
+        pprint(result)
