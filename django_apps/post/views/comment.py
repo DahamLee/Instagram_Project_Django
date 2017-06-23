@@ -25,6 +25,7 @@ def comment_create(request, post_pk):
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=post_pk)
         next = request.GET.get('next')
+        print('next: {}========='.format(next))
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -38,7 +39,7 @@ def comment_create(request, post_pk):
 
         if next:
             return redirect(next)
-            return redirect('post:post_detail', post_pk=post.pk)
+        return redirect('post:post_detail', post_pk=post.pk)
 
 
 def comment_modify(request, comment_pk):
@@ -52,10 +53,10 @@ def comment_modify(request, comment_pk):
         return redirect('post:post_detail', post_pk=comment.post.pk)
     else:
         form = CommentForm(instance=comment)
-        context = {
-            'form':form,
-        }
-        return render(request, 'post/comment_modify.html', context)
+    context = {
+        'form':form,
+    }
+    return render(request, 'post/comment_modify.html', context)
 
 @comment_owner
 @require_POST #get요청이 왔을때 아무일도 안한다

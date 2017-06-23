@@ -2,6 +2,10 @@
 
 .btn-xs { font-size: 10px; padding: 10px; }
 
+.btn-block { display: block; width: 100%; }
+
+.btn-primary { background-color: #3897f0; color: white; }
+
 .field-wrapper { margin-bottom: 10px; }
 
 .field-wrapper ul.errors { font-size: 11px; color: red; font-weight: bold; padding-left: 5px; }

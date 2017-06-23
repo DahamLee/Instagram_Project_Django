@@ -1,13 +1,13 @@
 from django import forms
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 
 class SignupForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', ' : : ')
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     kwargs.setdefault('label_suffix', ' : : ')
+    #     super().__init__(*args, **kwargs)
 
     username = forms.CharField(
         widget=forms.TextInput(
@@ -43,7 +43,7 @@ class SignupForm(forms.Form):
     def clean_username(self):
         username = self.cleaned_data.get('username')
 
-        if User.objects.filter(username=username).exists():
+        if username and User.objects.filter(username=username).exists():
             raise forms.ValidationError(
                 'Username already exists'
             )
@@ -55,6 +55,7 @@ class SignupForm(forms.Form):
             raise forms.ValidationError(
                 'Nickname already exist'
             )
+        return nickname
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -63,16 +64,17 @@ class SignupForm(forms.Form):
             raise forms.ValidationError(
                 'different password'
             )
+        return password2
 
     def create_user(self):
         username = self.cleaned_data['username']
-        password = self.cleaned_date['password2']
+        password = self.cleaned_data['password2']
         nickname = self.cleaned_data['nickname']
 
         user = User.objects.create_user(
             username=username,
             password=password,
-            nickname=nickname,
+            nickname=nickname
         )
         return user
 

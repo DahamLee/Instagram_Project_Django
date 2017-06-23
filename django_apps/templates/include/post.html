@@ -4,7 +4,9 @@
   <header>
     <div class="post-header-left">
       <img src="" alt="">
+      <a href="{% url 'member:profile' post.author.pk %}">
       <span class="header-author">{{ post.author }}</span>
+      </a>
     </div>
     <div class="post-header-right">
 

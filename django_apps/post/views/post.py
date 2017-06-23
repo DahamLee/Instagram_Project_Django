@@ -44,7 +44,7 @@ def post_list_original(request):
 
 def post_list(request):
     all_post = Post.objects.all()
-    paginator = Paginator(all_post, 2)
+    paginator = Paginator(all_post, 5)
     pagee = request.GET.get('page')
 
     try:

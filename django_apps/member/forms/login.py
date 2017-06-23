@@ -3,9 +3,9 @@ from django.contrib.auth import authenticate
 
 
 class LoginForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', ' : : ')
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     kwargs.setdefault('label_suffix', ' : : ')
+    #     super().__init__(*args, **kwargs)
 
     username = forms.CharField(
         widget=forms.TextInput(
@@ -22,15 +22,11 @@ class LoginForm(forms.Form):
         ))
 
     def clean(self):
-        cleaned_data = super().clean()
-        username = cleaned_data.get('username')
-        password = cleaned_data.get('password')
+        # cleaned_data = super().clean()
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
 
-        user = authenticate(
-            username=username,
-            password=password
-
-        )
+        user =authenticate(username=username, password=password)
         if user is not None:
             self.cleaned_data['user'] = user
         else:

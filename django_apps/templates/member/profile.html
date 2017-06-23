@@ -1,0 +1,75 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="content profile">
+
+
+    <h3>**{{ cur_user }}**</h3>
+    <img src="{{ cur_user.img_profile.url }}" alt="" width="150">
+    <br>
+    {% if user.is_authenticated %}
+        {% if user != cur_user %}
+        <form action="{% url 'member:follow_toggle' cur_user.pk %}" method="post">
+            {% csrf_token %}
+
+            {% if cur_user in user.following %}
+
+            <button type="submit" class="btn">팔로우 취소</button>
+
+            {% else %}
+
+            <button type="submit" class="btn">팔로우</button>
+
+            {% endif %}
+        </form>
+        {% else %}
+        <a href="{% url 'member:profile_edit' %}">
+        프로필 수정
+        </a>
+        {% endif %}
+
+    {% endif %}
+
+    <h5>Following</h5>
+
+    {% for user in cur_user.following %}
+    <div>
+        <a href="{% url 'member:profile' user_pk=user.pk %}" class="btn" style="float:left;">
+            {{ user }}
+        </a>
+    </div>
+    {% endfor %}
+    <br style="clear: both;">
+
+    <h5>Followers</h5>
+    {% for user in cur_user.followers %}
+    <div>
+        <a href="{% url 'member:profile' user_pk=user.pk %}" class="btn" style="float:left;">
+            {{ user }}
+        </a>
+        {% endfor %}
+        <br style="clear: both;">
+    </div>
+    <hr>
+
+    <ul class="profile-photo-list">
+
+
+    {% for post in posts %}
+        <li>
+            <a href="{% url 'post:post_detail' post_pk=post.pk %}">
+            <img src="{{ post.photo.url }}" alt="">
+            </a>
+        </li>
+    {% endfor %}
+
+    </ul>
+
+    {% if next_page %}
+    <a href="?page={{ next_page }}" class="btn btn-lg">
+    더 불러오기
+    </a>
+    {% endif %}
+
+
+    {% endblock %}
