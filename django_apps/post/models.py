@@ -100,5 +100,13 @@ class Tag(models.Model):
     def __str__(self):
         return 'Tag({})'.format(self.name)
 
-# class User(TimeStampedMixin):
-#     name = models.CharField(max_length=30)
+
+class Video(models.Model):
+    search_word = models.CharField(max_length=100)
+    youtube_videoId = models.CharField(max_length=100, unique=True)
+    youtube_title = models.CharField(max_length=100)
+    youtube_description = models.CharField(max_length=100)
+    youtube_thumbnails = models.CharField(max_length=100)
+
+
+

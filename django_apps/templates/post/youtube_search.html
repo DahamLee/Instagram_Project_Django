@@ -1,0 +1,19 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<div class="content">
+    <form action="">
+        <input type="text" name="q" placeholder="Youtube에서 검색할 키워드를 입력해주세요">
+    </form>
+    <div class>
+        <ul>
+            {% for video in videos %}
+            <li>
+                <img src="{{ video.youtube_thumbnails }}" alt="">
+                <a href="https://www.youtube.com/watch?v={{ video.youtube_videoId }}">{{ video.youtube_title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
