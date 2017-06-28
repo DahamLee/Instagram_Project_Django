@@ -28,7 +28,7 @@ class UserManager(DefaultUserManager):
             }
         )
 
-        if user_created:
+        if user_created and user_info.get('picture'):
             url_picture = user_info['picture']['data']['url']
 
             p = re.compile(r'.*\.([^?]+)')

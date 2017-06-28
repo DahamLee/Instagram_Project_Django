@@ -24,6 +24,9 @@ urlpatterns = [
     url(r'^tag/(?P<tag_name>\w+)/$', views.hashtag_post_list, name='hashtag_post_list'),
 
     url(r'^youtube/search/$', views.youtube_search, name='youtube_search'),
+    url(r'^youtube/post/create/$', views.post_create_with_video, name='youtube_post_create'),
+
+
 
     url(r'^.*/$', views.post_anyway, name='post_anyway'),
 ]
